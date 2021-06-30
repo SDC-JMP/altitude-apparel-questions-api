@@ -1,0 +1,36 @@
+{
+  "name": "package.json",
+  "version": "1.0.0",
+  "description": "Questions API",
+  "author": "mhhutton",
+  "license": "UNLICENSED",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SDC-JMP/altitude-apparel-questions-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SDC-JMP/altitude-apparel-questions-api/issues"
+  },
+  "homepage": "https://github.com/SDC-JMP/altitude-apparel-questions-api#readme",
+  "devDependencies": {
+    "eslint": "^7.29.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-react": "^7.24.0",
+    "webpack": "^5.40.0",
+    "webpack-cli": "^4.7.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-router": "^0.0.1",
+    "nodemon": "^2.0.7",
+    "pg": "^8.6.0",
+    "pg-promise": "^10.10.2"
+  }
+}
