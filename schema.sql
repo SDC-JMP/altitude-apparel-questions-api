@@ -1,43 +1,63 @@
-DROP DATABASE IF EXISTS question_db;
-CREATE DATABASE question_db;
+DROP DATABASE IF EXISTS questions_db;
+CREATE DATABASE questions_db;
 
 DROP TABLE IF EXISTS photos;
-DROP TABLE IF EXISTS answer;
-DROP TABLE IF EXISTS question;
+DROP TABLE IF EXISTS answers;
+DROP TABLE IF EXISTS questions;
 
-
-CREATE TABLE question (
-  id SERIAL NOT NULL,
-  asker_name VARCHAR(60) NOT NULL,
-  question_body VARCHAR(1000) NOT NULL,
-  -- date INT NOT NULL DEFAULT CURRENT_TIME,
-    date INT NOT NULL,
-  question_helpfulness INT,
+CREATE TABLE questions (
+  id BIGSERIAL NOT NULL,
+  product_id INT NOT NULL,
+  body VARCHAR(1000) NOT NULL,
+  date BIGINT NOT NULL,
+  asker_name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
   reported BOOLEAN NOT NULL DEFAULT false,
+  helpfulness INT,
   PRIMARY KEY (id)
 );
+COPY questions (id, product_id, body, date, asker_name, email, reported, helpfulness)
+FROM '/home/mhhutton/HR_CO1712/SDC/altitude-apparel-questions-api/csvFiles/questions.csv'
+DELIMITER ','
+CSV HEADER;
 
-CREATE TABLE answer (
-  id SERIAL NOT NULL,
-  answerer_name VARCHAR(60) NOT NULL,
-  answer_body VARCHAR(1000) NOT NULL,
-  -- date INT NOT NULL DEFAULT CURRENT_TIME,
-    date INT NOT NULL,
-  answer_helpfulness INT NOT NULL DEFAULT 0,
+ALTER TABLE questions ALTER COLUMN date TYPE TIMESTAMP USING to_timestamp(date / 1000) + ((date % 1000) || ' milliseconds') :: INTERVAL;
+
+SELECT setval('questions_id_seq',(SELECT max(id) FROM questions));
+
+CREATE TABLE answers (
+  id BIGSERIAL NOT NULL,
   question_id INT NOT NULL,
+  body VARCHAR(1000) NOT NULL,
+  date BIGINT NOT NULL,
+  answer_name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  reported BOOLEAN NOT NULL DEFAULT false,
+  helpfulness INT NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
-  CONSTRAINT questions_fkey FOREIGN KEY (question_id) REFERENCES question (id)
+  CONSTRAINT questions_fkey FOREIGN KEY (question_id) REFERENCES questions (id)
 );
+COPY answers (id, question_id, body, date, answer_name, email, reported, helpfulness)
+FROM '/home/mhhutton/HR_CO1712/SDC/altitude-apparel-questions-api/csvFiles/answers.csv'
+DELIMITER ','
+CSV HEADER;
+
+ALTER TABLE answers ALTER COLUMN date TYPE TIMESTAMP USING to_timestamp(date / 1000) + ((date % 1000) || ' milliseconds') :: INTERVAL;
+
+SELECT setval('answers_id_seq',(SELECT max(id) FROM answers));
 
 CREATE TABLE photos (
-  url VARCHAR(65000),
+  id BIGSERIAL NOT NULL,
   answer_id INT NOT NULL,
-  CONSTRAINT answers_fkey FOREIGN KEY (answer_id) REFERENCES answer (id)
+  url VARCHAR(65000),
+  PRIMARY KEY (id),
+  CONSTRAINT answers_fkey FOREIGN KEY (answer_id) REFERENCES answers (id)
 );
-/*  Execute this file from the command line by typing:
- *    mysql -u root < server/schema.sql
- *FOR POSTSQL psql -u postgres < sever/schema.sql
- *  to create the database and the tables.
-* psql -U postgres -h 127.0.0.1 -f ./schema.sql;*/
+COPY photos (id, answer_id, url)
+FROM '/home/mhhutton/HR_CO1712/SDC/altitude-apparel-questions-api/csvFiles/answers_photos.csv'
+DELIMITER ','
+CSV HEADER;
 
+SELECT setval('photos_id_seq',(SELECT max(id) FROM photos));
 
+-- Execute this file from the command line by typing: psql -U postgres -h 127.0.0.1 -f ./schema.sql;
