@@ -7,3 +7,4 @@ node_modules
 database/pool2.js
 server/index2.js
 .eslintrc.js
+sdc.pem
