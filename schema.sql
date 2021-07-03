@@ -41,11 +41,11 @@ COPY answers (id, question_id, body, date, answer_name, email, reported, helpful
 FROM '/home/mhhutton/HR_CO1712/SDC/altitude-apparel-questions-api/csvFiles/answers.csv'
 DELIMITER ','
 CSV HEADER;
-CREATE answers_id_idx on answers(question_id);
+CREATE INDEX answers_id_idx on answers(question_id);
 
 ALTER TABLE answers ALTER COLUMN date TYPE TIMESTAMP USING to_timestamp(date / 1000) + ((date % 1000) || ' milliseconds') :: INTERVAL;
 SELECT setval('answers_id_seq',(SELECT max(id) FROM answers));
-CREATE questions_id_idx on questions(product_id);
+CREATE INDEX answers_id_idx on questions(product_id);
 
 CREATE TABLE photos (
   id BIGSERIAL NOT NULL,
@@ -60,6 +60,6 @@ DELIMITER ','
 CSV HEADER;
 
 SELECT setval('photos_id_seq',(SELECT max(id) FROM photos));
-CREATE answers_id_idx on photos(answer_id);
+CREATE INDEX photos_id_idx on photos(answer_id);
 
 -- Execute this file from the command line by typing: psql -U postgres -h 127.0.0.1 -f ./schema.sql;
