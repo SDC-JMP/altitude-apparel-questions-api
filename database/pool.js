@@ -70,17 +70,17 @@ const getPhotos = (answerId, callback) => {
 
 const getQuestions = (prodId, callback) => {
   const queryStr = `SELECT
-    questions.id As question_id,
-    questions.product_id,
-    questions.body As question_body,
-    questions.date AS question_date,
-    questions.asker_name,
-    questions.email,
-    questions.reported,
-    questions.helpfulness AS question_helpfulness
-    From questions
-    WHERE product_id = $1 AND questions.reported = false
-    GROUP BY questions.id`;
+  questions.id,
+  questions.product_id,
+  questions.body,
+  questions.date,
+  questions.asker_name,
+  questions.email,
+  questions.reported,
+  questions.helpfulness
+  From questions
+  WHERE product_id = $1 AND questions.reported = false
+  GROUP BY questions.id`;
 
   const queryStr2 = `SELECT
     answers.id,
