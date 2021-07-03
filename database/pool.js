@@ -70,17 +70,17 @@ const getPhotos = (answerId, callback) => {
 
 const getQuestions = (prodId, callback) => {
   const queryStr = `SELECT
-  questions.id,
-  questions.product_id,
-  questions.body,
-  questions.date,
-  questions.asker_name,
-  questions.email,
-  questions.reported,
-  questions.helpfulness
-  From questions
-  WHERE product_id = $1 AND questions.reported = false
-  GROUP BY questions.id`;
+    questions.id As question_id,
+    questions.product_id,
+    questions.body As question_body,
+    questions.date AS question_date,
+    questions.asker_name,
+    questions.email,
+    questions.reported,
+    questions.helpfulness AS question_helpfulness
+    From questions
+    WHERE product_id = $1 AND questions.reported = false
+    GROUP BY questions.id`;
 
   const queryStr2 = `SELECT
     answers.id,
@@ -294,3 +294,56 @@ module.exports = {
   updateAnswerHelp,
   updateAnswerReport,
 };
+
+// const getQuestions = (prodId, callback) => {
+//   const queryStr = `SELECT
+//   questions.id,
+//   questions.product_id,
+//   questions.body,
+//   questions.date,
+//   questions.asker_name,
+//   questions.email,
+//   questions.reported,
+//   questions.helpfulness
+//   From questions
+//   WHERE product_id = $1 AND questions.reported = false
+//   GROUP BY questions.id`;
+
+//   const queryStr2 = `SELECT
+//     answers.id,
+//     answers.question_id,
+//     answers.body,
+//     answers.date,
+//     answers.answer_name,
+//     answers.email,
+//     answers.reported,
+//     answers.helpfulness,
+//     COALESCE (jsonb_agg(json_build_object(
+//     'id', photos.id,
+//     'answer_id', photos.answer_id,
+//     'url', photos.url))
+//     FILTER (WHERE photos.id IS NOT NULL),
+//     '[]') AS photos
+//   FROM answers
+//   LEFT JOIN photos ON photos.answer_id = answers.id
+//   WHERE question_id = $1 AND answers.reported = false
+//   GROUP BY answers.id`;
+//   let finalArr;
+//   pool.query(queryStr, [prodId])
+//     .then((res) => {
+//       finalArr = res.rows;
+//       for (let i = 0; i < res.rows.length; i += 1) {
+//         const inc = i;
+//         pool.query(queryStr2, [res.rows[i].id])
+//           .then((res2) => {
+//             for (let j = 0; j < res2.rows.length; j += 1) {
+//               finalArr[inc].answers = res2.rows[j];
+//             }
+//             finalArr[inc].answers = res2.rows;
+//           })
+//           .then(() => {
+//             if (inc === res.rows.length -1) {
+//               callback(finalArr);
+//             }
+//           });
+//       }
