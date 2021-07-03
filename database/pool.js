@@ -142,7 +142,7 @@ const getAnswers = (questionId, callback) => {
    answers.question_id,
    answers.body,
    answers.date,
-   answers.answer_name,
+   answers.answer_name AS answerer_name,
    answers.email,
    answers.reported,
    answers.helpfulness,
