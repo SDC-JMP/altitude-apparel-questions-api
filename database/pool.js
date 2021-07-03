@@ -80,7 +80,7 @@ const getQuestions = (prodId, callback) => {
   questions.helpfulness AS question_helpfulness
   From questions
   WHERE product_id = $1 AND questions.reported = false
-  GROUP BY questions.id`;
+  GROUP BY question_id`;
 
   const queryStr2 = `SELECT
     answers.id,
@@ -105,16 +105,13 @@ const getQuestions = (prodId, callback) => {
   pool.query(queryStr, [prodId])
     .then((res) => {
       finalArr = res.rows;
-      console.log('finalArr', finalArr);
       for (let i = 0; i < res.rows.length; i += 1) {
         const inc = i;
-        pool.query(queryStr2, [res.rows[i].id])
+        pool.query(queryStr2, [res.rows[i].question_id])
           .then((res2) => {
             for (let j = 0; j < res2.rows.length; j += 1) {
-              console.log('answerquery', j, res2.rows[j]);
               finalArr[inc].answers = res2.rows[j];
             }
-            console.log('answerquery', res2.rows);
             finalArr[inc].answers = res2.rows;
           })
           .then(() => {
