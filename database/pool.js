@@ -15,7 +15,7 @@ pool.connect((err) => {
 
 // ------------------------------GET ALLS
 const getAllQuestions = (callback) => {
-  const queryStr = 'SELECT * FROM questions WHERE id < 40';
+  const queryStr = 'SELECT * FROM questions LIMIT 1000';
   pool.query(queryStr, (err, results) => {
     if (err) {
       callback(err, null);
@@ -28,7 +28,7 @@ const getAllQuestions = (callback) => {
 };
 
 const getAllAnswers = (callback) => {
-  const queryStr = 'SELECT * FROM answers LIMIT 100';
+  const queryStr = 'SELECT * FROM answers LIMIT 1000';
   pool.query(queryStr, (err, results) => {
     if (err) {
       callback(err, null);
@@ -41,7 +41,7 @@ const getAllAnswers = (callback) => {
 };
 
 const getAllPhotos = (callback) => {
-  const queryStr = 'SELECT * FROM photos WHERE answer_id < 100';
+  const queryStr = 'SELECT * FROM photos LIMIT 1000';
   pool.query(queryStr, (err, results) => {
     if (err) {
       callback(err, null);
@@ -54,7 +54,7 @@ const getAllPhotos = (callback) => {
 };
 
 const getPhotos = (answerId, callback) => {
-  const queryStr = ' SELECT * FROM photos WHERE answer_id = $1';
+  const queryStr = 'SELECT * FROM photos limit 1000';
   pool.query(queryStr, [answerId], (err, results) => {
     if (err) {
       callback(err, null);
@@ -105,16 +105,13 @@ const getQuestions = (prodId, callback) => {
   pool.query(queryStr, [prodId])
     .then((res) => {
       finalArr = res.rows;
-      console.log('finalArr', finalArr);
       for (let i = 0; i < res.rows.length; i += 1) {
         const inc = i;
         pool.query(queryStr2, [res.rows[i].id])
           .then((res2) => {
             for (let j = 0; j < res2.rows.length; j += 1) {
-              console.log('answerquery', j, res2.rows[j]);
               finalArr[inc].answers = res2.rows[j];
             }
-            console.log('answerquery', res2.rows);
             finalArr[inc].answers = res2.rows;
           })
           .then(() => {
@@ -164,7 +161,7 @@ const getAnswers = (questionId, callback) => {
     } else {
       callback(null, results.rows);
       // eslint-disable-next-line no-console
-      console.table(results.rows);
+      //console.table(results.rows);
     }
   });
 };
