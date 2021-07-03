@@ -105,14 +105,19 @@ const getQuestions = (prodId, callback) => {
   pool.query(queryStr, [prodId])
     .then((res) => {
       finalArr = res.rows;
+      const answerObj = {};
       for (let i = 0; i < res.rows.length; i += 1) {
         const inc = i;
         pool.query(queryStr2, [res.rows[i].question_id])
           .then((res2) => {
             for (let j = 0; j < res2.rows.length; j += 1) {
-              finalArr[inc].answers = res2.rows[j];
+              const id = res2.rows[j].id
+              //finalArr[inc].answers = res2.rows[j];
+              console.log('ANSWER', { id: res2.rows[j] });
+              finalArr[inc].answers = answerObj[res2.rows[j].id] = res2.rows[j];
             }
-            finalArr[inc].answers = res2.rows;
+            //finalArr[inc].answers = res2.rows;
+            finalArr[inc].answers = answerObj;
           })
           .then(() => {
             if (inc === res.rows.length -1) {
