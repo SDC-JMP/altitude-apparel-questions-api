@@ -5,6 +5,6 @@ config.js
 package-lock.json
 node_modules
 database/pool2.js
-server/index2.js
 .eslintrc.js
 sdc_key.pem
+questions_db_export.pgsql
